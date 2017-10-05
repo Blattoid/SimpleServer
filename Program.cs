@@ -130,10 +130,7 @@ namespace SimpleServer
                                     listener.Stop();
                                     break;
                                 }
-                                else if (data.ToUpper() == "HELP")
-                                {
-                                    socket.Send(Encoding.ASCII.GetBytes("\nList of commands:\n\tHELP\n\t8BALL\n\tCREDITS\n\tEXIT\n"));
-                                }
+                                else if (data.ToUpper() == "HELP") { socket.Send(Encoding.ASCII.GetBytes("\nList of commands:\n\tHELP\n\t8BALL\n\tDRIVES\n\tCREDITS\n\tEXIT\n")); }
                                 else if (data.ToUpper() == "8BALL")
                                 {
 
@@ -158,16 +155,20 @@ namespace SimpleServer
                                         }
 
                                         //they haven't asked to exit, so let's respond with random answer
-                                        string[] ballanswers = { "It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "You may rely on it", "As I see it, yes", "Most likely", "Outlook good", "Yes", "Signs point to yes", "Reply hazy try again", "Ask again later", "Better not tell you now", "Cannot predict now", "Concentrate and ask again", "Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful" };
-                                        string ballresponse = ballanswers[new Random().Next(0, ballanswers.Length)]; //pick response to send
-                                        Console.WriteLine("Responded with '" + ballresponse + "'.");
-                                        socket.Send(Encoding.ASCII.GetBytes(ballresponse + "\n?")); //send response
+                                        if (data != "")
+                                        {
+                                            string[] ballanswers = { "It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "You may rely on it", "As I see it, yes", "Most likely", "Outlook good", "Yes", "Signs point to yes", "Reply hazy try again", "Ask again later", "Better not tell you now", "Cannot predict now", "Concentrate and ask again", "Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful" };
+                                            string ballresponse = ballanswers[new Random().Next(0, ballanswers.Length)]; //pick response to send
+                                            Console.WriteLine("Responded with '" + ballresponse + "'.");
+                                            socket.Send(Encoding.ASCII.GetBytes(ballresponse + "\n?")); //send response
+                                        }
+                                        else { socket.Send(Encoding.ASCII.GetBytes("?")); }
                                     }
                                     socket.Send(Encoding.ASCII.GetBytes("Goodbye!\n"));
                                 }
                                 else if (data.ToUpper() == "CREDITS")
                                 {
-                                    socket.Send(Encoding.ASCII.GetBytes("Made by a random kid on the internet entirely for fun.\nFor more C# projects visit their GitHub: github.com/floathandthing"));
+                                    socket.Send(Encoding.ASCII.GetBytes("Made by a random kid on the internet entirely for fun.\nFor more C# projects visit their GitHub: github.com/floathandthing\n"));
                                 }
                                 else if (data.ToUpper() == "DRIVES") { methods.ListDrives(socket); }
                                 else if (data.ToUpper() == "BLANK") { }
@@ -281,4 +282,5 @@ namespace SimpleServer
             return buffer.ToArray();
         }
     }
+}
 }
