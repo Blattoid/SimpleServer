@@ -11,8 +11,31 @@ namespace SimpleServer
 {
     class Server
     {
+        public static bool IsUnix
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
+        }
+        public static string DecideWhichSlash()
+        {
+            //Extremely simple; checks is IsUnix is true and returns the appropriate slash combination. This is to heed the filepath structures.
+            if (IsUnix)
+            {
+                return "/"; //unix
+            }
+            else
+            {
+                return "\\"; //windows
+            }
+        }
+        public static bool bannerExists;
+        public static bool useWelcomeBanner;
         public static bool hasenteredcorrectpass;
         public static string welcomeBanner;
+        public static string welcomeMessage;
         public static string password;
         public static bool usepassword;
         public static int port;
@@ -23,7 +46,9 @@ namespace SimpleServer
             try
             {
                 //Emergency rountine if the config file is missing
-                welcomeBanner = "Welcome to the server!";
+                useWelcomeBanner = true;
+                welcomeMessage = "Welcome to the server!";
+                welcomeBanner = @"\welcomeBanner.txt";
                 password = "password";
                 usepassword = false;
                 port = 8081;
@@ -31,7 +56,9 @@ namespace SimpleServer
                 //Check if the config file exists
                 if (File.Exists(Assembly.GetEntryAssembly().Location + ".config"))
                 {
-                    welcomeBanner = ConfigurationManager.AppSettings.Get("welcomeBanner");
+                    useWelcomeBanner = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("useWelcomeBanner"));
+                    welcomeBanner = ConfigurationManager.AppSettings.Get("welcomeBannerFilename");
+                    welcomeMessage = ConfigurationManager.AppSettings.Get("welcomeMessage");
                     password = ConfigurationManager.AppSettings.Get("password");
                     usepassword = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("usepassword"));
                     port = Convert.ToInt16(ConfigurationManager.AppSettings.Get("port"));
@@ -41,6 +68,16 @@ namespace SimpleServer
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("ERROR: CONFIG FILE MISSING");
                     Console.ForegroundColor = ConsoleColor.White;
+                }
+                //check if welcome banner doesn't exist
+                if (!File.Exists(Directory.GetCurrentDirectory() + DecideWhichSlash() + welcomeBanner) && useWelcomeBanner)
+                {
+                    Console.WriteLine("Warning: Welcome banner file '" + welcomeBanner + "' doesn't exist.");
+                    bannerExists = false;
+                }
+                else
+                {
+                    bannerExists = true;
                 }
             }
             catch (Exception e)
@@ -54,13 +91,17 @@ namespace SimpleServer
             {
                 try
                 {
-                    //if using password, print this to the console
+                    //if using password, print this to the console.
                     if (usepassword)
                     {
                         Console.WriteLine("Use password enabled.");
                     }
-
-                    Console.WriteLine("Starting server...");
+                    //If banner is enabled, print this to the console.
+                    if (useWelcomeBanner&&bannerExists)
+                    {
+                        Console.WriteLine("Use banner enabled.");
+                    }
+                    Console.WriteLine("\nStarting server...");
                     TcpListener listener = new TcpListener(IPAddress.Any, port);
                     listener.Start();
                     Console.WriteLine("Started server on port " + Convert.ToString(port));
@@ -70,8 +111,13 @@ namespace SimpleServer
                     IPEndPoint remoteIpEndPoint = socket.RemoteEndPoint as IPEndPoint; //create way of getting addresses
                     Console.WriteLine("Connection established from " + remoteIpEndPoint.Address);
 
-                    //First contact with the aliens! We need to make a good first impression, so send the banner. 
-                    if (usepassword) { socket.Send(Encoding.ASCII.GetBytes(welcomeBanner + "\nEnter password: ")); }
+                    //First contact with the aliens! We need to make a good first impression, so send the banner if specified. 
+                    if (bannerExists && useWelcomeBanner)
+                    {
+                        methods.readFile(welcomeBanner, socket);
+                    }
+                    //Check if we do or don't need a password to connect and send the appropriate message.
+                    if (usepassword) { socket.Send(Encoding.ASCII.GetBytes("\nEnter password: ")); }
                     else { socket.Send(Encoding.ASCII.GetBytes(welcomeBanner + "\nType help for a list of commands.\n>")); }
 
                     for (; ; )
@@ -193,6 +239,20 @@ namespace SimpleServer
     }
     public static class methods
     {
+        public static void readFile(string filename, Socket socket)
+        {
+            //filesize is in bytes.
+            FileInfo fileinfo = new FileInfo(@filename);
+            Int32 filesize = Convert.ToInt32(fileinfo.Length);
+
+            //Write each line of the file to the socket
+            foreach (string line in File.ReadAllLines(@filename)) { socket.Send(Encoding.ASCII.GetBytes(line+"\n")); }
+
+            Console.WriteLine("Sent banner.");
+        }
+
+
+
         public static void ListDrives(Socket socket)
         {
             //Command which allows access to basic drive information. Because why not.
@@ -282,5 +342,4 @@ namespace SimpleServer
             return buffer.ToArray();
         }
     }
-}
 }
