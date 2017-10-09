@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.IO;
 using System.Reflection;
@@ -87,20 +87,22 @@ namespace SimpleServer
                 Console.ForegroundColor = ConsoleColor.White;
             }
 
+            //if using password, print this to the console.
+            if (usepassword)
+            {
+                Console.WriteLine("Use password enabled.");
+            }
+            //If banner is enabled, print this to the console.
+            if (useWelcomeBanner && bannerExists)
+            {
+                Console.WriteLine("Use banner enabled.");
+            }
+
             for (; ; )
             {
                 try
                 {
-                    //if using password, print this to the console.
-                    if (usepassword)
-                    {
-                        Console.WriteLine("Use password enabled.");
-                    }
-                    //If banner is enabled, print this to the console.
-                    if (useWelcomeBanner&&bannerExists)
-                    {
-                        Console.WriteLine("Use banner enabled.");
-                    }
+
                     Console.WriteLine("\nStarting server...");
                     TcpListener listener = new TcpListener(IPAddress.Any, port);
                     listener.Start();
@@ -155,7 +157,7 @@ namespace SimpleServer
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Incorrect password entered.");
+                                    Console.WriteLine("Incorrect password entered: '" + data + "'.");
                                     socket.Send(Encoding.ASCII.GetBytes("Incorrect password.\n"));
                                     hasenteredcorrectpass = false;
                                     socket.Disconnect(false);
@@ -246,7 +248,7 @@ namespace SimpleServer
             Int32 filesize = Convert.ToInt32(fileinfo.Length);
 
             //Write each line of the file to the socket
-            foreach (string line in File.ReadAllLines(@filename)) { socket.Send(Encoding.ASCII.GetBytes(line+"\n")); }
+            foreach (string line in File.ReadAllLines(@filename)) { socket.Send(Encoding.ASCII.GetBytes(line + "\n")); }
 
             Console.WriteLine("Sent banner.");
         }
