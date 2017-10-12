@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.IO;
 using System.Reflection;
@@ -46,7 +46,7 @@ namespace SimpleServer
             try
             {
                 //Emergency rountine if the config file is missing
-                useWelcomeBanner = true;
+                useWelcomeBanner = false;
                 welcomeMessage = "Welcome to the server!";
                 welcomeBanner = @"\welcomeBanner.txt";
                 password = "password";
@@ -131,6 +131,11 @@ namespace SimpleServer
                         {
                             //if the user closes the connection without warning this would normally crash the program. This handles it.
                             Console.WriteLine("Disconnected prematurely.\n");
+
+                            //reset password
+                            hasenteredcorrectpass = false;
+                            usepassword = true;
+
                             socket.Disconnect(false);
                             socket.Dispose();
                             listener.Stop();
@@ -159,6 +164,11 @@ namespace SimpleServer
                                 {
                                     Console.WriteLine("Incorrect password entered: '" + data + "'.");
                                     socket.Send(Encoding.ASCII.GetBytes("Incorrect password.\n"));
+
+                                    //reset password
+                                    hasenteredcorrectpass = false;
+                                    usepassword = true;
+
                                     hasenteredcorrectpass = false;
                                     socket.Disconnect(false);
                                     socket.Dispose();
