@@ -31,6 +31,8 @@ namespace SimpleServer
                 return "\\"; //windows
             }
         }
+        //various variables used throughout the program
+        public static string ourIP;
         public static bool bannerExists;
         public static bool useWelcomeBanner;
         public static bool hasenteredcorrectpass;
@@ -39,6 +41,7 @@ namespace SimpleServer
         public static string password;
         public static bool usepassword;
         public static int port;
+
         // Incoming data from the client.  
         public static void Main(string[] args)
         {
@@ -110,6 +113,18 @@ namespace SimpleServer
                     Socket socket = listener.AcceptSocket();
                     //connected
 
+                    try
+                    {
+                        //Get our IP, needed by the SOCKET command to spit out the server IP
+                        IPEndPoint localIpEndPoint = socket.LocalEndPoint as IPEndPoint;
+                        ourIP = Convert.ToString(localIpEndPoint.Address); //needs to be converted to a string
+                    }
+                    catch (Exception error)
+                    {
+                        Console.WriteLine("Error finding server IP: " + error.Message+"\nThe server IP cannot be shown with the command SOCKET.\n");
+                        ourIP = "[ERROR FINDING]";
+                    }
+
                     IPEndPoint remoteIpEndPoint = socket.RemoteEndPoint as IPEndPoint; //create way of getting addresses
                     Console.WriteLine("Connection established from " + remoteIpEndPoint.Address);
 
@@ -130,7 +145,7 @@ namespace SimpleServer
                         if (methods.IsConnected(socket) == false)
                         {
                             //if the user closes the connection without warning this would normally crash the program. This handles it.
-                            Console.WriteLine("Disconnected prematurely.\n");
+                            Console.WriteLine("Connection closed.\n");
 
                             //reset password
                             hasenteredcorrectpass = false;
@@ -181,14 +196,14 @@ namespace SimpleServer
                                 Console.WriteLine("Recieved '" + data + "'");
                                 if (data.ToUpper() == "EXIT")
                                 {
-                                    Console.WriteLine("Client waved goodbye\n");
+                                    Console.WriteLine("Connection closed.\n");
                                     socket.Send(Encoding.ASCII.GetBytes("Goodbye!\n")); //respond
                                     socket.Disconnect(false);
                                     socket.Dispose();
                                     listener.Stop();
                                     break;
                                 }
-                                else if (data.ToUpper() == "HELP") { socket.Send(Encoding.ASCII.GetBytes("\nList of commands:\n\tHELP\n\t8BALL\n\tDRIVES\n\tCREDITS\n\tEXIT\n")); }
+                                else if (data.ToUpper() == "HELP") { socket.Send(Encoding.ASCII.GetBytes("\nList of commands:\n\tHELP\n\t8BALL\n\tDRIVES\n\tSOCKET\n\tCREDITS\n\tEXIT\n")); }
                                 else if (data.ToUpper() == "8BALL")
                                 {
 
@@ -203,7 +218,7 @@ namespace SimpleServer
                                             if (data.Length != 0) { break; }
                                         }
                                         data = data.Remove(data.Length - 1, 1);
-                                        Console.WriteLine("Question: '" + data + "'");
+                                        Console.WriteLine("\tQuestion: '" + data + "'");
 
                                         //check for exit command
                                         if (data.ToUpper() == "EXIT")
@@ -213,14 +228,15 @@ namespace SimpleServer
                                         }
 
                                         //they haven't asked to exit, so let's respond with random answer
-                                        if (data != "")
+                                        if (data != "") //if they actually typed something in as a question:
                                         {
+                                            //array of answers
                                             string[] ballanswers = { "It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "You may rely on it", "As I see it, yes", "Most likely", "Outlook good", "Yes", "Signs point to yes", "Reply hazy try again", "Ask again later", "Better not tell you now", "Cannot predict now", "Concentrate and ask again", "Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful" };
                                             string ballresponse = ballanswers[new Random().Next(0, ballanswers.Length)]; //pick response to send
-                                            Console.WriteLine("Responded with '" + ballresponse + "'.");
+                                            Console.WriteLine("\tResponded with '" + ballresponse + "'.");
                                             socket.Send(Encoding.ASCII.GetBytes(ballresponse + "\n?")); //send response
                                         }
-                                        else { socket.Send(Encoding.ASCII.GetBytes("?")); }
+                                        else { socket.Send(Encoding.ASCII.GetBytes("?")); } //they didn't enter a question, so let's keep asking.
                                     }
                                     socket.Send(Encoding.ASCII.GetBytes("Goodbye!\n"));
                                 }
@@ -229,10 +245,18 @@ namespace SimpleServer
                                     socket.Send(Encoding.ASCII.GetBytes("Made by a random kid on the internet entirely for fun.\nFor more C# projects visit their GitHub: github.com/floathandthing\n"));
                                 }
                                 else if (data.ToUpper() == "DRIVES") { methods.ListDrives(socket); }
+                                else if (data.ToUpper() == "SOCKET")
+                                {
+                                    socket.Send(Encoding.ASCII.GetBytes("You are connected as " + remoteIpEndPoint.Address + "\nThe server is listening on port " + port + "\nThe server IP is " + ourIP + "\n")); 
+                                    Console.WriteLine("\tThey are connected as " + remoteIpEndPoint.Address + "\n\tWe are listening on port " + port + "\n\tOur IP is " + ourIP); //switch up the pronouns so it makes sense for us, as this is being printed to the console.
+                                }
                                 else if (data.ToUpper() == "BLANK") { }
                                 else if (data.ToUpper() == "") { } //if they type nothing do nothing.
                                 else { socket.Send(Encoding.ASCII.GetBytes("Unknown command '" + data + "'.\n")); }
                                 socket.Send(Encoding.ASCII.GetBytes(">"));
+
+                                //just for luck ;)
+                                GC.Collect();
                             }
                         }
                     }
@@ -322,7 +346,7 @@ namespace SimpleServer
                         double freespacepercentage = 100 * (double)drive.TotalFreeSpace / drive.TotalSize;
                         //Round to 1 decimal place
                         freespacepercentage = Convert.ToDouble(freespacepercentage.ToString("n1"));
-                        Console.WriteLine(drive.Name + " (" + drive.VolumeLabel + ") " + freespacepercentage + "% free of " + size + ".");
+                        Console.WriteLine("\t"+drive.Name + " (" + drive.VolumeLabel + ") " + freespacepercentage + "% free of " + size + ".");
                         socket.Send(Encoding.ASCII.GetBytes(drive.Name + " (" + drive.VolumeLabel + ") " + freespacepercentage + "% free of " + size + ".\n"));
                     }
 
