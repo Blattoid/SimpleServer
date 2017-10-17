@@ -1,13 +1,9 @@
 # SimpleServer
 
 This server uses a simple TCP Listener to interact over a network or Internet. (There is no encryption however so be careful that nothing secret is sent like passwords) Once connected it optionally asks for a password or just brings you to the menu. This option in the config file. 
-
 Surveillance is a prominent feature of the server, with incorrect password attempts, commands used, sometimes what the command sent back.
-
 If for whatever reason you cannot compile the program yourself or you don’t want to, pre-compiled executables for Windows can be found in the Executables folder. 
-
 If you want to run the server on Linux, use something like Mono, which allows you to execute .NET framework applications on UNIX.
-
 I recommend using something like NetCat to communicate with the server. I did try it with Telnet but it didn't seem to work properly unfortunately. If you are clever you could try making your own client for it.
 
 
