@@ -22,16 +22,13 @@ namespace SimpleServer
         public static string DecideWhichSlash()
         {
             //Extremely simple; checks is IsUnix is true and returns the appropriate slash combination. This is to heed the filepath structures.
-            if (IsUnix)
-            {
-                return "/"; //unix
+            if (IsUnix) {return "/"; //unix
             }
-            else
-            {
-                return "\\"; //windows
+            else {return "\\"; //windows
             }
         }
         //various variables used throughout the program
+        public static string goodbyeMessage;
         public static string ourIP;
         public static bool bannerExists;
         public static bool useWelcomeBanner;
@@ -50,6 +47,7 @@ namespace SimpleServer
             {
                 //Emergency rountine if the config file is missing
                 useWelcomeBanner = false;
+                goodbyeMessage = "Goodbye!";
                 welcomeMessage = "Welcome to the server!";
                 welcomeBanner = @"\welcomeBanner.txt";
                 password = "password";
@@ -59,6 +57,8 @@ namespace SimpleServer
                 //Check if the config file exists
                 if (File.Exists(Assembly.GetEntryAssembly().Location + ".config"))
                 {
+                    //import configuration settings
+                    goodbyeMessage = ConfigurationManager.AppSettings.Get("goodbyeMessage");
                     useWelcomeBanner = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("useWelcomeBanner"));
                     welcomeBanner = ConfigurationManager.AppSettings.Get("welcomeBannerFilename");
                     welcomeMessage = ConfigurationManager.AppSettings.Get("welcomeMessage");
@@ -78,10 +78,7 @@ namespace SimpleServer
                     Console.WriteLine("Warning: Welcome banner file '" + welcomeBanner + "' doesn't exist.");
                     bannerExists = false;
                 }
-                else
-                {
-                    bannerExists = true;
-                }
+                else { bannerExists = true; }
             }
             catch (Exception e)
             {
@@ -91,15 +88,9 @@ namespace SimpleServer
             }
 
             //if using password, print this to the console.
-            if (usepassword)
-            {
-                Console.WriteLine("Use password enabled.");
-            }
+            if (usepassword){ Console.WriteLine("Use password enabled."); }
             //If banner is enabled, print this to the console.
-            if (useWelcomeBanner && bannerExists)
-            {
-                Console.WriteLine("Use banner enabled.");
-            }
+            if (useWelcomeBanner && bannerExists){ Console.WriteLine("Use banner enabled."); }
 
             for (; ; )
             {
@@ -129,10 +120,7 @@ namespace SimpleServer
                     Console.WriteLine("Connection established from " + remoteIpEndPoint.Address);
 
                     //First contact with the aliens! We need to make a good first impression, so send the banner if specified. 
-                    if (bannerExists && useWelcomeBanner)
-                    {
-                        methods.readFile(welcomeBanner, socket);
-                    }
+                    if (bannerExists && useWelcomeBanner){ methods.readFile(welcomeBanner, socket); }
                     //Check if we do or don't need a password to connect and send the appropriate message.
                     if (usepassword) { socket.Send(Encoding.ASCII.GetBytes("\nEnter password: ")); }
                     else { socket.Send(Encoding.ASCII.GetBytes(welcomeBanner + "\nType help for a list of commands.\n>")); }
@@ -221,10 +209,7 @@ namespace SimpleServer
                                         Console.WriteLine("\tQuestion: '" + data + "'");
 
                                         //check for exit command
-                                        if (data.ToUpper() == "EXIT")
-                                        {
-                                            //exit the loop of question asking
-                                            break;
+                                        if (data.ToUpper() == "EXIT") { break;  //exit the loop of question asking
                                         }
 
                                         //they haven't asked to exit, so let's respond with random answer
@@ -238,12 +223,9 @@ namespace SimpleServer
                                         }
                                         else { socket.Send(Encoding.ASCII.GetBytes("?")); } //they didn't enter a question, so let's keep asking.
                                     }
-                                    socket.Send(Encoding.ASCII.GetBytes("Goodbye!\n"));
+                                    socket.Send(Encoding.ASCII.GetBytes(goodbyeMessage+"\n"));
                                 }
-                                else if (data.ToUpper() == "CREDITS")
-                                {
-                                    socket.Send(Encoding.ASCII.GetBytes("Made by a random kid on the internet entirely for fun.\nFor more C# projects visit their GitHub: github.com/floathandthing\n"));
-                                }
+                                else if (data.ToUpper() == "CREDITS") { socket.Send(Encoding.ASCII.GetBytes("Made by a random kid on the internet entirely for fun.\nFor more C# projects visit their GitHub: github.com/floathandthing\n")); }
                                 else if (data.ToUpper() == "DRIVES") { methods.ListDrives(socket); }
                                 else if (data.ToUpper() == "SOCKET")
                                 {
