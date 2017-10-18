@@ -92,17 +92,17 @@ namespace SimpleServer
             //If banner is enabled, print this to the console.
             if (useWelcomeBanner && bannerExists){ Console.WriteLine("Use banner enabled."); }
 
+            Console.WriteLine("\nStarting server on port "+port+"...");
+            TcpListener listener = new TcpListener(IPAddress.Any, port);
             for (; ; )
             {
                 try
                 {
-
-                    Console.WriteLine("\nStarting server...");
-                    TcpListener listener = new TcpListener(IPAddress.Any, port);
+                    Console.WriteLine("Waiting for connection...");
+                    //Wait for a connection
                     listener.Start();
-                    Console.WriteLine("Started server on port " + Convert.ToString(port));
-                    Socket socket = listener.AcceptSocket();
-                    //connected
+                    Socket socket = listener.AcceptSocket(); //accept the conenction
+                    //at this point we are connected.
 
                     try
                     {
