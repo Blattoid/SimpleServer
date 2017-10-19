@@ -34,7 +34,6 @@ namespace SimpleServer
         public static bool useWelcomeBanner;
         public static bool hasenteredcorrectpass;
         public static string welcomeBanner;
-        public static string welcomeMessage;
         public static string password;
         public static bool usepassword;
         public static int port;
@@ -48,11 +47,10 @@ namespace SimpleServer
                 //Emergency rountine if the config file is missing
                 useWelcomeBanner = false;
                 goodbyeMessage = "Goodbye!";
-                welcomeMessage = "Welcome to the server!";
                 welcomeBanner = @"\welcomeBanner.txt";
                 password = "password";
                 usepassword = false;
-                port = 8081;
+                port = 8080;
 
                 //Check if the config file exists
                 if (File.Exists(Assembly.GetEntryAssembly().Location + ".config"))
@@ -61,7 +59,6 @@ namespace SimpleServer
                     goodbyeMessage = ConfigurationManager.AppSettings.Get("goodbyeMessage");
                     useWelcomeBanner = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("useWelcomeBanner"));
                     welcomeBanner = ConfigurationManager.AppSettings.Get("welcomeBannerFilename");
-                    welcomeMessage = ConfigurationManager.AppSettings.Get("welcomeMessage");
                     password = ConfigurationManager.AppSettings.Get("password");
                     usepassword = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("usepassword"));
                     port = Convert.ToInt16(ConfigurationManager.AppSettings.Get("port"));
