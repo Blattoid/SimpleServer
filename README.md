@@ -7,22 +7,24 @@ If you want to run the server on Linux, use something like Mono, which allows yo
 I recommend using something like NetCat to communicate with the server. I did try it with Telnet but it didn't seem to work.
 
 
-Server Commands Documentation:
+## Commands Documentation:
 
-HELP:
+Here lies the help and documentation for each server command.
+
+### HELP
 Simply lists the commands that the server recognises. This is a hard-coded string for the same reason that it isn't in the config file: because you can't alter what commands the server recognises.
 
-8BALL:
+### 8BALL
 If you have ever owned a 'Magic 8 Ball', you know that you ask it a question, shake it, turn it over and it gives you an answer. I implemented this in the early stages of development, just to let you be able to do something when you connected to the server. When you first enter the command, it will greet you and prompt you for a question. Once you enter something (other than nothing), it will spit out an answer to your question. When you are done asking questions, simply enter 'exit' as a question to quit. Since it is being monitored, the admin may get a good chuckle out of this...
 
-DRIVES:
+### DRIVES
 This command was born when I wanted to be able to view more useful information about the server, rather than just asking questions like 'will I have a decent job?'. This command spits out information about volumes attached to the server, like drive letters (if supported), volume labels, free space percentages, along with total capacity on the drive. This is enough information to calculate the total used space on the volume, so I didn't include that. The command doesn't accept any additional input. When the client executes the command, the results are also displayed on the server side, so the admin can see what they see.
 
-SOCKET:
+### SOCKET
 This command gets the IP of both the server and the client, along with the port the server is using, and return it. This is helpful if you are using domains and you want to see the IP of the server. Whilst this is also returned to the server console, this probably doesn’t reveal anything new, since the client IP is logged upon connection, and both port and server IP are probably already known to the admin anyway.
 
-CREDITS:
+### CREDITS
 This is very simple; when run it returns a hard-coded string which gives credit to me for making the program. It also includes a link to my GitHub page, if the user wishes to see more.
 
-EXIT:
+### EXIT
 This command probably doesn’t need explaining but here goes anyway. When run this command will give a goodbye message (which is configurable in the config file) and close the connection with the user. 
