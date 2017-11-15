@@ -22,9 +22,9 @@ namespace SimpleServer
         public static string DecideWhichSlash()
         {
             //Extremely simple; checks is IsUnix is true and returns the appropriate slash combination. This is to heed the filepath structures.
-            if (IsUnix) {return "/"; //unix
+            if (IsUnix) { return "/"; //unix
             }
-            else {return "\\"; //windows
+            else { return "\\"; //windows
             }
         }
         //various variables used throughout the program
@@ -85,11 +85,11 @@ namespace SimpleServer
             }
 
             //if using password, print this to the console.
-            if (usepassword){ Console.WriteLine("Use password enabled."); }
+            if (usepassword) { Console.WriteLine("Use password enabled."); }
             //If banner is enabled, print this to the console.
-            if (useWelcomeBanner && bannerExists){ Console.WriteLine("Use banner enabled."); }
+            if (useWelcomeBanner && bannerExists) { Console.WriteLine("Use banner enabled."); }
 
-            Console.WriteLine("\nStarting server on port "+port+"...");
+            Console.WriteLine("\nStarting server on port " + port + "...");
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             for (; ; )
             {
@@ -109,7 +109,7 @@ namespace SimpleServer
                     }
                     catch (Exception error)
                     {
-                        Console.WriteLine("Error finding server IP: " + error.Message+"\nThe server IP cannot be shown with the command SOCKET.\n");
+                        Console.WriteLine("Error finding server IP: " + error.Message + "\nThe server IP cannot be shown with the command SOCKET.\n");
                         ourIP = "[ERROR FINDING]";
                     }
 
@@ -117,7 +117,7 @@ namespace SimpleServer
                     Console.WriteLine("Connection established from " + remoteIpEndPoint.Address);
 
                     //First contact with the aliens! We need to make a good first impression, so send the banner if specified. 
-                    if (bannerExists && useWelcomeBanner){ methods.readFile(welcomeBanner, socket); }
+                    if (bannerExists && useWelcomeBanner) { methods.readFile(welcomeBanner, socket); }
                     //Check if we do or don't need a password to connect and send the appropriate message.
                     if (usepassword) { socket.Send(Encoding.ASCII.GetBytes("\nEnter password: ")); }
                     else { socket.Send(Encoding.ASCII.GetBytes(welcomeBanner + "\nType help for a list of commands.\n>")); }
@@ -182,13 +182,13 @@ namespace SimpleServer
                                 if (data.ToUpper() == "EXIT")
                                 {
                                     Console.WriteLine("Connection closed.\n");
-                                    socket.Send(Encoding.ASCII.GetBytes("Goodbye!\n")); //respond
+                                    socket.Send(Encoding.ASCII.GetBytes(goodbyeMessage+"\n")); //respond
                                     socket.Disconnect(false);
                                     socket.Dispose();
                                     listener.Stop();
                                     break;
                                 }
-                                else if (data.ToUpper() == "HELP") { socket.Send(Encoding.ASCII.GetBytes("\nList of commands:\n\tHELP\n\t8BALL\n\tDRIVES\n\tSOCKET\n\tCREDITS\n\tEXIT\n")); }
+                                else if (data.ToUpper() == "HELP") { socket.Send(Encoding.ASCII.GetBytes("\nList of commands:\n\tHELP\n\t8BALL\n\tCAPSLOCKTEXT\n\tDRIVES\n\tSOCKET\n\tCREDITS\n\tEXIT\n")); }
                                 else if (data.ToUpper() == "8BALL")
                                 {
 
@@ -206,7 +206,9 @@ namespace SimpleServer
                                         Console.WriteLine("\tQuestion: '" + data + "'");
 
                                         //check for exit command
-                                        if (data.ToUpper() == "EXIT") { break;  //exit the loop of question asking
+                                        if (data.ToUpper() == "EXIT")
+                                        {
+                                            break;  //exit the loop of question asking
                                         }
 
                                         //they haven't asked to exit, so let's respond with random answer
@@ -220,13 +222,50 @@ namespace SimpleServer
                                         }
                                         else { socket.Send(Encoding.ASCII.GetBytes("?")); } //they didn't enter a question, so let's keep asking.
                                     }
-                                    socket.Send(Encoding.ASCII.GetBytes(goodbyeMessage+"\n"));
+                                    socket.Send(Encoding.ASCII.GetBytes(goodbyeMessage + "\n"));
                                 }
                                 else if (data.ToUpper() == "CREDITS") { socket.Send(Encoding.ASCII.GetBytes("Made by a random kid on the internet entirely for fun.\nFor more C# projects visit their GitHub: github.com/floathandthing\n")); }
                                 else if (data.ToUpper() == "DRIVES") { methods.ListDrives(socket); }
+                                else if (data.ToUpper() == "CAPSLOCKTEXT")
+                                {
+                                    socket.Send(Encoding.ASCII.GetBytes("Enter a string to have it alternating caps lock (lIkE ThIs.\nINPUT:"));
+
+                                    //get text to apply effect to
+                                    for (; ; )
+                                    {
+                                        data_bytes = methods.ReceiveAll(socket);
+                                        data = Encoding.UTF8.GetString(data_bytes, 0, data_bytes.Length);
+
+                                        if (data.Length != 0) { break; }
+                                    }
+                                    data = data.Remove(data.Length - 1, 1);
+                                    Console.WriteLine("\tInput: '" + data + "'");
+
+                                    //Apply effect
+                                    int temp = 0;
+                                    string output = "";
+                                    foreach (char character in data)
+                                    {
+                                        if (temp == 1)
+                                        {
+                                            temp = 0;
+                                            output = output + Char.ToUpper(character);
+                                        }
+                                        else
+                                        {
+                                            temp = 1;
+                                            output = output + Char.ToLower(character);
+                                        }
+                                    }
+
+                                    //Send result
+                                    Console.WriteLine("\tOutput: '" + output + "'.");
+                                    socket.Send(Encoding.ASCII.GetBytes(output + "\n")); //send response
+                                }
+
                                 else if (data.ToUpper() == "SOCKET")
                                 {
-                                    socket.Send(Encoding.ASCII.GetBytes("You are connected as " + remoteIpEndPoint.Address + "\nThe server is listening on port " + port + "\nThe server IP is " + ourIP + "\n")); 
+                                    socket.Send(Encoding.ASCII.GetBytes("You are connected as " + remoteIpEndPoint.Address + "\nThe server is listening on port " + port + "\nThe server IP is " + ourIP + "\n"));
                                     Console.WriteLine("\tThey are connected as " + remoteIpEndPoint.Address + "\n\tWe are listening on port " + port + "\n\tOur IP is " + ourIP); //switch up the pronouns so it makes sense for us, as this is being printed to the console.
                                 }
                                 else if (data.ToUpper() == "BLANK") { }
@@ -239,8 +278,6 @@ namespace SimpleServer
                             }
                         }
                     }
-
-
                 }
                 catch (Exception e)
                 {
@@ -325,7 +362,7 @@ namespace SimpleServer
                         double freespacepercentage = 100 * (double)drive.TotalFreeSpace / drive.TotalSize;
                         //Round to 1 decimal place
                         freespacepercentage = Convert.ToDouble(freespacepercentage.ToString("n1"));
-                        Console.WriteLine("\t"+drive.Name + " (" + drive.VolumeLabel + ") " + freespacepercentage + "% free of " + size + ".");
+                        Console.WriteLine("\t" + drive.Name + " (" + drive.VolumeLabel + ") " + freespacepercentage + "% free of " + size + ".");
                         socket.Send(Encoding.ASCII.GetBytes(drive.Name + " (" + drive.VolumeLabel + ") " + freespacepercentage + "% free of " + size + ".\n"));
                     }
 
