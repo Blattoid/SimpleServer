@@ -132,9 +132,10 @@ namespace SimpleServer
                             //if the user closes the connection without warning this would normally crash the program. This handles it.
                             Console.WriteLine("Connection closed.\n");
 
-                            //reset password
+                            //reset routine
                             hasenteredcorrectpass = false;
-                            usepassword = true;
+                            data_bytes = new byte[0];
+                            data = "";
 
                             socket.Disconnect(false);
                             socket.Dispose();
@@ -157,8 +158,8 @@ namespace SimpleServer
                                     Console.WriteLine("Correct password entered.");
                                     socket.Send(Encoding.ASCII.GetBytes("Welcome! Type help for a list of commands.\n"));
                                     hasenteredcorrectpass = true;
-                                    usepassword = false;
-                                    data = "BLANK";
+                                    usepassword = true;
+                                    data = "";
                                 }
                                 else
                                 {
@@ -228,7 +229,7 @@ namespace SimpleServer
                                 else if (data.ToUpper() == "DRIVES") { methods.ListDrives(socket); }
                                 else if (data.ToUpper() == "CAPSLOCKTEXT")
                                 {
-                                    socket.Send(Encoding.ASCII.GetBytes("Enter a string to have it alternating caps lock (lIkE ThIs.\nINPUT:"));
+                                    socket.Send(Encoding.ASCII.GetBytes("Enter a string to have it alternating caps lock. (lIkE ThIs)\nINPUT:"));
 
                                     //get text to apply effect to
                                     for (; ; )
@@ -268,7 +269,6 @@ namespace SimpleServer
                                     socket.Send(Encoding.ASCII.GetBytes("You are connected as " + remoteIpEndPoint.Address + "\nThe server is listening on port " + port + "\nThe server IP is " + ourIP + "\n"));
                                     Console.WriteLine("\tThey are connected as " + remoteIpEndPoint.Address + "\n\tWe are listening on port " + port + "\n\tOur IP is " + ourIP); //switch up the pronouns so it makes sense for us, as this is being printed to the console.
                                 }
-                                else if (data.ToUpper() == "BLANK") { }
                                 else if (data.ToUpper() == "") { } //if they type nothing do nothing.
                                 else { socket.Send(Encoding.ASCII.GetBytes("Unknown command '" + data + "'.\n")); }
                                 socket.Send(Encoding.ASCII.GetBytes(">"));
