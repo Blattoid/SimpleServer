@@ -6,6 +6,3 @@
    \ \____________\ \_______\ \_______\ \_______\ \_______\ \__\    \ \__\ \_______\
     \|____________|\|_______|\|_______|\|_______|\|_______|\|__|     \|__|\|_______|
                                                                                     
-
-NOTICE TO ADMINS: The default password is password. You may change this in the configuration file.
-This message may be removed by editing welcomeBanner.txt

@@ -98,7 +98,7 @@ namespace SimpleServer
                     Console.WriteLine("Waiting for connection...");
                     //Wait for a connection
                     listener.Start();
-                    Socket socket = listener.AcceptSocket(); //accept the conenction
+                    Socket socket = listener.AcceptSocket(); //accept the connection
                     //at this point we are connected.
 
                     try
@@ -158,7 +158,7 @@ namespace SimpleServer
                                     Console.WriteLine("Correct password entered.");
                                     socket.Send(Encoding.ASCII.GetBytes("Welcome! Type help for a list of commands.\n"));
                                     hasenteredcorrectpass = true;
-                                    usepassword = true;
+                                    usepassword = false;
                                     data = "";
                                 }
                                 else
@@ -284,7 +284,6 @@ namespace SimpleServer
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Error recieving: " + e);
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.ReadKey();
                 }
             }
         }
