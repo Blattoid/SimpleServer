@@ -38,7 +38,7 @@ namespace SimpleServer
         public static bool usepassword;
         public static int port;
 
-        // Incoming data from the client.  
+        // Main void. Everything in here is executed on startup.
         public static void Main(string[] args)
         {
             //Read the config file
@@ -120,7 +120,7 @@ namespace SimpleServer
                     if (bannerExists && useWelcomeBanner) { methods.readFile(welcomeBanner, socket); }
                     //Check if we do or don't need a password to connect and send the appropriate message.
                     if (usepassword) { socket.Send(Encoding.ASCII.GetBytes("\nEnter password: ")); }
-                    else { socket.Send(Encoding.ASCII.GetBytes(welcomeBanner + "\nType help for a list of commands.\n>")); }
+                    else { socket.Send(Encoding.ASCII.GetBytes("\nType help for a list of commands.\n>")); }
 
                     for (; ; )
                     {
@@ -166,7 +166,7 @@ namespace SimpleServer
                                     Console.WriteLine("Incorrect password entered: '" + data + "'.");
                                     socket.Send(Encoding.ASCII.GetBytes("Incorrect password.\n"));
 
-                                    //reset password
+                                    //reset password variables so the next time someone connects they have to enter a password as well.
                                     hasenteredcorrectpass = false;
                                     usepassword = true;
 
@@ -227,7 +227,7 @@ namespace SimpleServer
                                 }
                                 else if (data.ToUpper() == "CREDITS") { socket.Send(Encoding.ASCII.GetBytes("Made by a random kid on the internet entirely for fun.\nFor more C# projects visit their GitHub: github.com/floathandthing\n")); }
                                 else if (data.ToUpper() == "DRIVES") { methods.ListDrives(socket); }
-                                else if (data.ToUpper() == "CAPSLOCKTEXT")
+                                else if (data.ToUpper() == "CAPSLOCKTEXT") //To be honest, I was running out of ideas.
                                 {
                                     socket.Send(Encoding.ASCII.GetBytes("Enter a string to have it alternating caps lock. (lIkE ThIs)\nINPUT:"));
 
@@ -271,7 +271,7 @@ namespace SimpleServer
                                 }
                                 else if (data.ToUpper() == "") { } //if they type nothing do nothing.
                                 else { socket.Send(Encoding.ASCII.GetBytes("Unknown command '" + data + "'.\n")); }
-                                socket.Send(Encoding.ASCII.GetBytes(">"));
+                                socket.Send(Encoding.ASCII.GetBytes(">")); //Send the > character to symbolise a ready prompt.
 
                                 //just for luck ;)
                                 GC.Collect();
@@ -301,8 +301,6 @@ namespace SimpleServer
 
             Console.WriteLine("Sent banner.");
         }
-
-
 
         public static void ListDrives(Socket socket)
         {
@@ -378,13 +376,13 @@ namespace SimpleServer
         }
         public static byte[] ReceiveAll(this Socket socket)
         {
+            //While I will admit to stealing this, I do know what it is doing. 
+            //It reads the incoming data from the socket, appending it byte by byte to a list.
             var buffer = new List<byte>();
-
             while (socket.Available > 0)
             {
                 var currByte = new Byte[1];
                 var byteCounter = socket.Receive(currByte, currByte.Length, SocketFlags.None);
-
                 if (byteCounter.Equals(1))
                 {
                     buffer.Add(currByte[0]);
