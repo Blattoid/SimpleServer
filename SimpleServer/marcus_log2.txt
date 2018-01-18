@@ -1,0 +1,84 @@
+Use password enabled.
+Starting server...
+Started server on port 8081
+Connection established from 10.6.164.52
+Correct password entered.
+Recieved 'BLANK'
+Recieved '8all'
+Recieved '8ball'
+Question: 'are ditto's good basketball players?'
+Responded with 'Concentrate and ask again'.
+Recieved '8ball'
+Question: 'are ditto's good basketball players?'
+Responded with 'Most likely'.
+Recieved '8ball'
+Question: 'can I become a pineapple?'
+Responded with 'As I see it, yes'.
+Recieved '8ball'
+Question: 'is bob marley a god?'
+Responded with 'Better not tell you now'.
+Recieved '8ball'
+Question: 'can I eat chicken?'
+Responded with 'Outlook good'.
+Recieved 'yay'
+Recieved '8all'
+Recieved 'will donald trump die soon?'
+Recieved '8ball'
+Question: 'will donald trump die soon?'
+Responded with 'Very doubtful'.
+Recieved '8ball'
+Question: 'pine independance never ends attacks people providing little economy'
+Responded with 'Yes'.
+Recieved '8ball'
+Question: 'can I be.... a midget?'
+Responded with 'It is certain'.
+Recieved '8ball'
+Question: 'I am the magic 8-Ball! Ask me any question!'
+Responded with 'It is certain'.
+Recieved '8ball'
+Question: 'can I die now?'
+Responded with 'It is certain'.
+Recieved '...'
+Recieved '8ball'
+Question: 'I am a magical unicorn?'
+Responded with 'My sources say no'.
+Recieved '8ball'
+Question: '!noitseuq yna ksa !llaB-8 cigam eht ma I'
+Responded with 'Yes'.
+Recieved '8ball'
+Question: 'am I a god?'
+Responded with 'Ask again later'.
+Recieved '8ball'
+Question: 'am I a god?'
+Responded with 'My sources say no'.
+Recieved 'am I a god?'
+Recieved 'umm'
+Recieved ''
+Recieved ''
+Recieved ''
+Recieved ''
+Recieved '
+
+
+
+'
+Recieved '8ball'
+Question: 'am I a god?'
+Responded with 'Outlook good'.
+Recieved '8ball'
+Question: 'Pen is'
+Responded with 'Ask again later'.
+Recieved '8ball'
+Question: 'ROFL'
+Responded with 'Without a doubt'.
+Recieved '8ball'
+Question: 'LMAO'
+Responded with 'Most likely'.
+Recieved '8ball'
+Question: 'woooooooo'
+Responded with 'Outlook good'.
+Recieved '8ball'
+Question: 'niiiice'
+Responded with 'Yes definitely'.
+Recieved 'exit'
+Client waved goodbye

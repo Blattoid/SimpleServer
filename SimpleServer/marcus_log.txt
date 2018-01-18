@@ -1,0 +1,43 @@
+Use password enabled.
+Starting server...
+Started server on port 8080
+Connection established from 127.0.0.1
+Incorrect password entered.
+Use password enabled.
+Starting server...
+Started server on port 8080
+Connection established from 10.6.164.52
+Correct password entered.
+Recieved 'BLANK'
+Recieved 'of corse'
+Recieved 'echo what'
+Recieved 'say what'
+Recieved 'uhhh'
+Recieved 'help?'
+Recieved 'help'
+Recieved 'help'
+Recieved '8ball'
+Question: 'what is this?'
+Responded with 'My reply is no'.
+Recieved '8ball'
+Question: 'why'
+Responded with 'Most likely'.
+Recieved '8ball'
+Question: 'AM I DEAD?'
+Responded with 'Very doubtful'.
+Recieved '8ball'
+Question: 'AM I DEAD?'
+Responded with 'As I see it, yes'.
+Recieved 'help'
+Recieved '8ball'
+Question: 'why did you do this with the the fricken 8080 port? xD'
+Responded with 'Reply hazy try again'.
+Recieved 'why did you do this with the the fricken 8080 port? xD'
+Recieved '8ball'
+Question: 'why did you do this with the the fricken 8080 port? xD'
+Responded with 'Most likely'.
+Recieved '8ball'
+Question: 'I give up'
+Responded with 'Better not tell you now'.
+Recieved 'exit'
+Client waved goodbye!
