@@ -4,4 +4,3 @@ C:\Users\Daniel\Source\Repos\SimpleServer\SimpleServer\bin\Debug\SimpleServer.pd
 C:\Users\Daniel\Source\Repos\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csproj.CoreCompileInputs.cache
 C:\Users\Daniel\Source\Repos\SimpleServer\SimpleServer\obj\Debug\SimpleServer.exe
 C:\Users\Daniel\Source\Repos\SimpleServer\SimpleServer\obj\Debug\SimpleServer.pdb
-C:\Users\Daniel\Source\Repos\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csprojResolveAssemblyReference.cache

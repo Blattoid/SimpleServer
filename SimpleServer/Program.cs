@@ -158,7 +158,6 @@ namespace SimpleServer
                                     Console.WriteLine("Correct password entered.");
                                     socket.Send(Encoding.ASCII.GetBytes("Welcome! Type help for a list of commands.\n"));
                                     hasenteredcorrectpass = true;
-                                    usepassword = false;
                                     data = "";
                                 }
                                 else
@@ -168,7 +167,6 @@ namespace SimpleServer
 
                                     //reset password variables so the next time someone connects they have to enter a password as well.
                                     hasenteredcorrectpass = false;
-                                    usepassword = true;
 
                                     hasenteredcorrectpass = false;
                                     socket.Disconnect(false);
